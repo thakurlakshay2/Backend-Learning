@@ -36,4 +36,17 @@ public class UserService {
     public boolean checkPassword(String rawPassword, String storedHash) {
         return BCrypt.checkpw(rawPassword, storedHash);
     }
+
+    public boolean updateUser(Long id, String name, String email) {
+        UserEntity existing = users.get(id);
+        if (existing == null) {
+            return false;
+        }
+        users.put(id, new UserEntity(id, name, email, existing.getPassword(), existing.getRole(), existing.getCreatedAt(), existing.getPanCard(), existing.getAadhaarCard()));
+        return true;
+    }
+
+    public boolean deleteUser(Long id) {
+        return users.remove(id) != null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.phase0.controller;
 
+import com.example.phase0.dto.CreateUserRequest;
 import com.example.phase0.dto.UserResponseDto;
 import com.example.phase0.model.UserEntity;
 import com.example.phase0.service.UserService;
@@ -36,6 +37,18 @@ public class UserController {
     public ResponseEntity<String> login(@RequestParam String password, @RequestParam String storedHash) {
         boolean ok = userService.checkPassword(password, storedHash);
         return ok ? ResponseEntity.ok("Login success") : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest request) {
+        boolean updated = userService.updateUser(id, request.getName(), request.getEmail());
+        return updated ? ResponseEntity.ok("Updated user " + id) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        boolean deleted = userService.deleteUser(id);
+        return deleted ? ResponseEntity.ok("Deleted user " + id) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 
     @PostMapping("/bad-status")
